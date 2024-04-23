@@ -47,7 +47,7 @@ with open("data/Test Summary Sheet(Input - Output Calculator).csv") as file:
     count = 0
     for row in csv_reader:
         test_run_name = row[0]
-        frequency = float(row[13])
+        frequency = float(row[14])
         frequencies[test_run_name] = frequency
         
         count+=1
