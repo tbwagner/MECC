@@ -1,6 +1,7 @@
 import csv
 import re
 import matplotlib.pyplot as plt
+import math
 
 def getOutput(FILENAME):
     total_output = 0
@@ -10,9 +11,11 @@ def getOutput(FILENAME):
         for _ in range(14):
             next(csv_reader)
         for row in csv_reader:
-            total_output += abs(float(row[2]))
+            value = abs(float(row[2]))
+            if value < 1:
+                total_output += value ** 2
     
-    return total_output
+    return math.sqrt(total_output / 200000)
 
 def getFilename(test_run_name):
     pattern = r'([a-zA-Z_]+)(\d+)'
@@ -60,10 +63,10 @@ for i in range(1, 16):
     if i == 10:
         continue
     test_run_name = "Parallel" + str(i)
-    xs_parallel.append(frequencies[test_run_name])
+    xs_parallel.append(1/frequencies[test_run_name])
     ys_parallel.append(getOutput(getFilename(test_run_name)))
 
-plt.plot(xs_parallel, ys_parallel, label="Parallel")
+plt.plot(xs_parallel, ys_parallel, 'o', label="Parallel")
 
 
 xs_perpendicular = []
@@ -72,10 +75,10 @@ for i in range(16, 33):
     if i in (24, 27, 30):  
         continue
     test_run_name = "Perp" + str(i)
-    xs_perpendicular.append(frequencies[test_run_name])
+    xs_perpendicular.append(1/frequencies[test_run_name])
     ys_perpendicular.append(getOutput(getFilename(test_run_name)))
 
-plt.plot(xs_perpendicular, ys_perpendicular, label="Perpendicular")
+plt.plot(xs_perpendicular, ys_perpendicular, 'o', label="Perpendicular")
 
 
 xs_triangular = []
@@ -84,10 +87,16 @@ for i in range(33, 49):
     if i == 39:  
         continue
     test_run_name = "Trig" + str(i)
-    xs_triangular.append(frequencies[test_run_name])
+    xs_triangular.append(1/frequencies[test_run_name])
     ys_triangular.append(getOutput(getFilename(test_run_name)))
 
-plt.plot(xs_triangular, ys_triangular, label="Triangular")
+plt.plot(xs_triangular, ys_triangular, 'o', label="Triangular")
+
+plt.xlabel("Period (s)")
+plt.ylabel("RMS of Total Output (V)")
+plt.title("Plot of Period (s) vs RMS of Total Output (V)")
+plt.legend()
+plt.show()
 
 
 xs_rodperp = []
@@ -96,10 +105,18 @@ for i in range(49, 65):
     if i == 60:  
         continue
     test_run_name = "Rod_Perp" + str(i)
-    xs_rodperp.append(frequencies[test_run_name])
+    xs_rodperp.append(1/frequencies[test_run_name])
     ys_rodperp.append(getOutput(getFilename(test_run_name)))
 
-plt.plot(xs_rodperp, ys_rodperp, label="Perpendicular with Rod")
+plt.plot(xs_rodperp, ys_rodperp, 'o', label="Rod")
+
+plt.plot(xs_perpendicular, ys_perpendicular, 'o', label="Spring")
+
+plt.xlabel("Period (s)")
+plt.ylabel("RMS of Total Output (V)")
+plt.title("Plot of Period (s) vs RMS of Total Output (V)")
+plt.legend()
+plt.show()
 
 
 xs_rodperplw = []
@@ -108,15 +125,15 @@ for i in range(65, 92):
     if i in range(68, 80):  
         continue
     test_run_name = "Perp_LW_" + str(i)
-    xs_rodperplw.append(frequencies[test_run_name])
+    xs_rodperplw.append(1/frequencies[test_run_name])
     ys_rodperplw.append(getOutput(getFilename(test_run_name)))
 
-plt.plot(xs_rodperplw, ys_rodperplw, label="Perpendicular with Rod Light Weight")
+plt.plot(xs_rodperplw, ys_rodperplw, 'o', label="Light Weight")
 
-plt.xlabel("Frequency (Hz)")
-plt.ylabel("Total Output (V)")
-plt.title("Plot of Frequency (Hz) vs Total Output (V)")
+plt.plot(xs_perpendicular, ys_perpendicular, 'o', label="Heavy Weight")
 
+plt.xlabel("Period (s)")
+plt.ylabel("RMS of Total Output (V)")
+plt.title("Plot of Period (s) vs RMS of Total Output (V)")
 plt.legend()
-
 plt.show()
